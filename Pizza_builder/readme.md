@@ -102,6 +102,39 @@ Design a pizza-making system that supports:
 | **Decorator**        | Add features dynamically without changing the base class. | We use decorators like **`Cheese`**, **`Olives`**, **`Jalapenos`**, and **`Size`** to add things on top of the base pizza. These wrap the pizza object and update its **description** and **price** without modifying the pizza class itself.                   |
 | **Composition**      | Building complex objects from simpler parts.              | Each pizza is built by **composing multiple decorators** (size + toppings) on top of a base pizza. This is flexible and modular. Each decorator “contains” the pizza it’s enhancing.                                                                            |
 
+## ✅ Why Use Factory Pattern for Regions?
+Each region (like New York or Chicago) has its own variations of pizzas. For example:
+
+New York Farmhouse vs Chicago Farmhouse – same base pizza type, but different prep, crust, or bake style.
+
+So, we want a way to say:
+
+“Give me a Farmhouse in New York style”
+vs
+“Give me a Farmhouse in Chicago style”
+
+Hence, we use a Factory class per region to encapsulate how that region makes pizzas.
+
+Example:
+```python
+
+pizza = NewYorkFactory().get_pizza("Farmhouse")
+pizza = ChicagoFactory().get_pizza("Farmhouse")
+Each knows how to build the correct variation — but the client (main code) doesn't care about the construction details.
+```
+## ✅ Why Use Abstract Factory Pattern on Top?
+Now we have multiple regional factories (New York, Chicago, California, etc.). To make our code extensible and consistent, we define a common interface or base class called AbstractPizzaFactory.
+
+This ensures:
+
+All regional factories must implement the method get_pizza(pizza_type)
+
+Code using the factory can be written polymorphically without knowing the region
+
+## So Why Both?
+Concept	Purpose
+🏭 Factory Pattern	Helps encapsulate pizza creation logic within each regional class
+🧱 Abstract Factory	Helps define a family of factories and ensure consistency
 
 ## ✅ SOLID Principles Applied
 | Principle   | How it’s followed                                                    |
