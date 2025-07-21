@@ -33,6 +33,7 @@ class Event:
         if user in self.participants:
             self.participants.remove(user)
 
+
 # -------------------- Calendar --------------------
 class Calendar:
     def __init__(self, user: User):
@@ -89,6 +90,10 @@ class WeeklyRecurrence(RecurrenceStrategy):
     def get_next_occurrence(self, event: Event):
         return Event(event.title, event.start + timedelta(weeks=1), event.end + timedelta(weeks=1), event.owner, event.recurrence)
 
+class MonthlyRecurrence(RecurrenceStrategy):
+    def get_next_occurrence(self, event: Event):
+        return Event(event.title, event.start + timedelta(days=30), event.end + timedelta(days=30), event.owner, event.recurrence)
+
 # -------------------- Recurrence Factory --------------------
 class RecurrenceFactory:
     def get_strategy(self, recurrence: str):
@@ -96,6 +101,8 @@ class RecurrenceFactory:
             return DailyRecurrence()
         elif recurrence == "WEEKLY":
             return WeeklyRecurrence()
+        elif recurrence == "MONTHLY":
+            return MonthlyRecurrence()
         else:
             return None
 
@@ -118,3 +125,18 @@ if __name__ == "__main__":
         next_event = strategy.get_next_occurrence(meeting)
         alice.calendar.create_event(next_event)
         alice.calendar.list_events("WEEKLY")
+    
+    meeting = Event("Conflict Sync", now + timedelta(hours=2), now + timedelta(hours=3), alice, recurrence="DAILY")
+
+    alice.calendar.create_event(meeting)
+    meeting.add_participant(bob)
+
+    alice.calendar.list_events("DAILY")
+
+    meeting = Event("Monthly Sync", now + timedelta(hours=4), now + timedelta(hours=5), alice, recurrence="DAILY")
+
+    alice.calendar.create_event(meeting)
+    meeting.add_participant(bob)
+
+    alice.calendar.list_events("MONTHLY")
+

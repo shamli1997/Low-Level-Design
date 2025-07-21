@@ -94,6 +94,66 @@ Design a calendar system that supports:
 
 ---
 
+## UML Diagram:
+
+                  +--------------------+
+                  |      User          |
+                  +--------------------+
+                  | - user_id: str     |
+                  | - name: str        |
+                  | - calendar: Calendar |
+                  +--------------------+
+                            |
+                            | Composition
+                            v
+                  +--------------------+
+                  |     Calendar       |
+                  +--------------------+
+                  | - user: User       |
+                  | - events: List[Event] |
+                  +--------------------+
+                  | +create_event()    |
+                  | +delete_event()    |
+                  | +has_conflict()    |
+                  | +list_events()     |
+                  +--------------------+
+                            |
+                            | Aggregation
+                            v
+                  +--------------------+
+                  |      Event         |
+                  +--------------------+
+                  | - title: str       |
+                  | - start: datetime  |
+                  | - end: datetime    |
+                  | - owner: User      |
+                  | - participants: [] |
+                  | - recurrence: str  |
+                  +--------------------+
+                  | +add_participant() |
+                  | +remove_participant() |
+                  +--------------------+
+                            |
+                            | Composition
+                            v
+         +----------------------------+
+         |   RecurrenceStrategy (ABC) |
+         +----------------------------+
+         | +get_next_occurrence()     |
+         +----------------------------+
+                ^           ^
+                |           |
+      +----------------+ +----------------+
+      | DailyRecurrence| | WeeklyRecurrence|
+      +----------------+ +----------------+
+
+        +-------------------------+
+        |   RecurrenceFactory     |
+        +-------------------------+
+        | +get_strategy(recurrence:str) |
+        +-------------------------+
+
+
 ## 🧪 Sample Run
 ```python
 user = User("u123", "Alice")
